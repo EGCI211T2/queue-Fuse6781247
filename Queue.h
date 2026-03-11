@@ -1,85 +1,113 @@
-
 #ifndef queue_h
 #define queue_h
 #include "Node.h"
+#include <iostream>
+using namespace std;
+
+// Menu items: 1=Ramen(200), 2=Fried Chicken(100), 3=Spaghetti(150)
+string getMenuName(int order) {
+    switch(order) {
+        case 1: return "Ramen";
+        case 2: return "Fried Chicken";
+        case 3: return "Spaghetti";
+        default: return "Unknown";
+    }
+}
+
+int getMenuPrice(int order) {
+    switch(order) {
+        case 1: return 200;
+        case 2: return 100;
+        case 3: return 150;
+        default: return 0;
+    }
+}
+
 class Queue {
-	NodePtr headPtr,tailPtr;
-	int size;
+    NodePtr headPtr, tailPtr;
+    int size;
+    int customerCount;
 public:
-    void enqueue(int);
-    int dequeue();
+    void enqueue(int order, int qty);
+    NodePtr dequeue();
+    int getSize();
     Queue();
     ~Queue();
 };
 
-Queue::Queue(){
-    //initialize Queue
+Queue::Queue() {
     headPtr = NULL;
     tailPtr = NULL;
     size = 0;
+    customerCount = 0;
 }
 
-void Queue::enqueue(int x){
-  NodePtr new_node = new NODE(x);
-if(new_node){ 
-    /* Add head and tail for me please */
-   //1. connect & Change tail
-    if (size==0){
-      //2. (may be) change head  when the queue is empty
-        headPtr = new_node;
-    }
-     else {
-
-        tailPtr->set_next(new_node);
-    }
-    tailPtr = new_node;
-      //3. increase size 
-    size++;
- }
+int Queue::getSize() {
+    return size;
 }
 
-int Queue::dequeue(){
-  if(size>0){
-    NodePtr t =  headPtr;
-     int value = t->get_value();
-    /* Add head and tail for me please */
-    
-    //Moev head to next node 
+void Queue::enqueue(int order, int qty) {
+    NodePtr new_node = new NODE(order, qty);
+    if (new_node) {
+        if (size == 0) {
+            headPtr = new_node;
+        } else {
+            tailPtr->set_next(new_node);
+        }
+        tailPtr = new_node;
+        size++;
+        cout << "My order is " << order << endl;
+    }
+}
 
-    headPtr = headPtr->get_next();
-    //if quene become empty tail must be  NULL
-    if (headPtr == NULL) tailPtr = NULL;
-        
-        delete t;
+NodePtr Queue::dequeue() {
+    if (size > 0) {
+        customerCount++;
+        NodePtr t = headPtr;
+
+        cout << "Cutomer no: " << customerCount << endl;
+        cout << getMenuName(t->get_order()) << endl;
+
+        int price = getMenuPrice(t->get_order()) * t->get_qty();
+        cout << "You have to pay " << price << endl;
+
+        int cash;
+        cout << ":Cash:";
+        cin >> cash;
+
+        if (cash >= price) {
+            cout << "Cash:" << cash << endl;
+            cout << "Thank you" << endl;
+            if (cash > price) {
+                cout << "Change is:" << (cash - price) << endl;
+            }
+        } else {
+            cout << "Not enough cash!" << endl;
+        }
+
+        headPtr = headPtr->get_next();
+        if (headPtr == NULL) tailPtr = NULL;
+
         size--;
-        return value;
+        return t;
+    } else {
+        cout << "Empty Queue" << endl;
+        return NULL;
     }
-    else{
-         cout<<"Empty Queue"<<endl;
-         return -1;
-
-    }  
-    
-  }
-
-
-
-
-Queue::~Queue(){
-      if(size>0) {
-        cout<<"Clearing queue" <<endl;
-    //delete all remaning Queue (i.e. DQ all) 
-    
-    while(size>0){
-
-        int x = dequeue();
-
-    
-        if(x!= -1) cout<<"dequeing " <<x<<endl;
-    }
-    
-}
 }
 
+Queue::~Queue() {
+    if (size > 0) {
+        cout << string(50, '=') << endl;
+        cout << " There are " << size << " ppl left in the queue" << endl;
+        while (size > 0) {
+            NodePtr t = headPtr;
+            headPtr = headPtr->get_next();
+            if (headPtr == NULL) tailPtr = NULL;
+            delete t;
+            size--;
+        }
+    }
+}
 
 #endif

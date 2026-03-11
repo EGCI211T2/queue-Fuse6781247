@@ -1,22 +1,36 @@
 #include <iostream>
 #include <cstring>
+#include <cstdlib>
 using namespace std;
 #include "Queue.h"
 
-int main(int argc , char **argv) {
-  Queue q;
-   int i,x;
-   
+int main(int argc, char **argv) {
+    Queue q;
 
- for(i=1;i<argc;i++){
-        if(strcmp(argv[i],"x")==0){
-            x=q.dequeue();
-            if(x!=-1) cout<<"dequeing "<<x<<endl;
+    int i = 1;
+    while (i < argc) {
+        if (strcmp(argv[i], "x") == 0) {
+            // Dequeue: process next customer
+            NodePtr node = q.dequeue();
+            if (node != NULL) {
+                delete node;
+            }
+            i++;
+        } else {
+            // Expect two values: order qty
+            if (i + 1 < argc && strcmp(argv[i+1], "x") != 0) {
+                int order = atoi(argv[i]);
+                int qty   = atoi(argv[i+1]);
+                q.enqueue(order, qty);
+                i += 2;
+            } else {
+                // Only one value left, treat qty as 1
+                int order = atoi(argv[i]);
+                q.enqueue(order, 1);
+                i++;
+            }
         }
-        else {
-       q.enqueue(atoi(argv[i]));
-           
-        }
- }
-  return 0;
+    }
+
+    return 0;
 }
