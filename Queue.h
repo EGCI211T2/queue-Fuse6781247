@@ -75,7 +75,7 @@ Queue::~Queue(){
         int x = dequeue();
 
     
-        if(x!= -1) cout<<"dequeing" <<x<<endl;
+        if(x!= -1) cout<<"dequeing " <<x<<endl;
     }
     
 }
