@@ -55,7 +55,7 @@ int Queue::dequeue(){
         return value;
     }
     else{
-         cout<<"Empty queue"<<endl;
+         cout<<"Empty Queue"<<endl;
          return -1;
 
     }  
