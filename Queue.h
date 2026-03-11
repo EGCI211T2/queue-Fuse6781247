@@ -48,27 +48,37 @@ int Queue::dequeue(){
 
     headPtr = headPtr->get_next();
     //if quene become empty tail must be  NULL
-    if (headPtr == NULL){
-        tailPtr = NULL;
+    if (headPtr == NULL) tailPtr = NULL;
+        
+        delete t;
+        size--;
+        return value;
     }
-    size--;
-    delete t;
-    return value;
+    else{
+         cout<<"Empty queue"<<endl;
+         return -1;
+
+    }  
+    
   }
-  cout<<"Empty queue";
-  return -1;
-}
+
 
 
 
 Queue::~Queue(){
-      
+      if(size>0) {
+        cout<<"Clearing queue" <<endl;
     //delete all remaning Queue (i.e. DQ all) 
-    cout<<" destructor"<<endl;
+    
     while(size>0){
-        dequeue();
+
+        int x = dequeue();
+
+    
+        if(x!= -1) cout<<"dequeing" <<x<<endl;
     }
     
+}
 }
 
 
